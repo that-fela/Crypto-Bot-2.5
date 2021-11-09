@@ -1,0 +1,9 @@
+started on:	 	15/10/2021
+start wallet value:	88.59 USDT
+problems:	 	0
+
+end on:			15/11/2021
+end wallet value:	USDT
+problems:		
+
+expected back test:	USDT

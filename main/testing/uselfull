@@ -1,0 +1,2 @@
+#with open(os.path.join(os.path.join(os.getcwd(),"main/data/"), "data.dat"), 'wb') as f:
+#    pickle.dump(candles, f)

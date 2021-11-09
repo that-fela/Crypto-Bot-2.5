@@ -1,0 +1,4 @@
+1) test best pair on available with bybit, yahoo finance
+2) get historical purely with bybit api
+3) discuss spot/derevative
+4) Once a day vs constant setup discussion
