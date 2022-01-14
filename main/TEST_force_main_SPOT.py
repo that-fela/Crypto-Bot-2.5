@@ -14,7 +14,7 @@ import smtplib
 # ALL THIS SHIT IS ON SPOT MARKET
 
 try:
-    networker.test("UoA-WiFi", False)
+    networker.test("two guys one router", False)
 
     t1 = 11.96 # 11:57:40
     t2 = 11.99 # 11:59:24

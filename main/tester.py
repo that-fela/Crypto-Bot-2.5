@@ -1,4 +1,4 @@
-from ntpath import splitunc
+
 import historic
 import matplotlib.pyplot as plt
 from _traders import _trader_controller as tc
@@ -32,16 +32,16 @@ else: print('NAHSD')
 #client = bybit.bybit(test=False, api_key=s.apiKey, api_secret=s.apiSecretKey)
 #print(client.Symbol.Symbol_get().result()[0]['result'][6])
 #print(client.LinearOrder.LinearOrder_new(side="Buy",symbol="ETHUSDT",order_type="Market",qty=0.002,time_in_force="GoodTillCancel",reduce_only=False, close_on_trigger=False).result())
-
+'''
 #candles1 = historic.get_data_yahoo('ETH-USD', '1d', '199d')
-#candles1 = historic.get_data_bybit('ETHUSDT', 'D', 199)
+latest = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '1', 199)
 #print(len(candles1))
 #print(candles1[len(candles1)-1].close)
 #candles2 = historic.get_data('ETH-USD', '5m', '1mo')
 
 
 #print(type(client.LinearPositions.LinearPositions_myPosition(symbol="ETHUSDT").result()[0]['result'][0]['size']))
-
+'''
 t = tc.ema3ema6ema9.init(True, 1000, 0.0015, 0.04, 0.01)
 for i in candles1:
     t.add(i)
@@ -59,8 +59,15 @@ plt.plot(gr[0], gr[11], linestyle='dashed')
 plt.plot(gr[0], gr[12], linestyle='dashed')
 plt.plot(gr[0], gr[1])
 plt.plot(gr[0], gr[13])
-plt.show()'''
+plt.show()
+'''
+t = []
+for i in latest:
+    t.append(i.close)
+
+plt.plot(t)
+plt.show()
 
 #fbv.get_best_sl_tp(candles1, tc.ema3ema6ema9, [1,7], [1,7], 1000)
 #fbv.get_best_sl_tp(candles1, tc.ema5ema8ema13, [1,7], [1,7])
-#fbv.get_best_sl_tp(candles1, tc.stochRsi3ema81450, [1,7], [1,7])'''
+#fbv.get_best_sl_tp(candles1, tc.stochRsi3ema81450, [1,7], [1,7])

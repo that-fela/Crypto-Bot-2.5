@@ -1,11 +1,11 @@
-def get_best_sl_tp(candles, test_trader, range_sl, range_tp, start_money=1000):
+def get_best_sl_tp(candles, test_trader, range_sl, range_tp, fee=0.0015, start_money=1000):
     '''gets best SL TP Values. Ranges array has to be values * 100'''
     params = []
     vals = []
     returns = []
     for sl in range(range_sl[0], range_sl[1]):
         for tp in range(range_tp[0], range_tp[1]):
-            t = test_trader.init(True, start_money, 0.0015, tp/100, sl/100)
+            t = test_trader.init(True, start_money, fee, tp/100, sl/100)
 
             for i in candles:
                 t.add(i)

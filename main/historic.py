@@ -27,10 +27,11 @@ def get_data_yahoo(ticker='ETH-USD', interval='1d', period='3mo'):
 
     return candles
 
-def get_data_bybit_DERIVATIVES(ticker='ETHUSDT', interval='D', period=60):
+def get_data_bybit_DERIVATIVES(ticker='ETHUSDT', interval='D', period=60, min=False):
     '''Gets historical using ByBit. days https://bybit-exchange.github.io/docs/inverse/#t-orderbook. for unix time stamp https://www.unixtimestamp.com/index.php'''
     client = bybit.bybit(test=True, api_key=s.apiKey, api_secret=s.apiSecretKey)
     fromm = int(time.time()) - period * 24 * 60 * 60
+    if min: fromm = int(time.time()) - period * 60
     data = client.LinearKline.LinearKline_get(symbol=ticker, interval=interval, **{'from':fromm}).result()
     
     candles = []
