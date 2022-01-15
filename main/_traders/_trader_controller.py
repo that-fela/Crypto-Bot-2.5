@@ -1,4 +1,4 @@
-from _traders import ema10ema41support, ema5ema8ema13, stochRsi3ema81450, ema3ema6ema9, admaworkthing, atr9supertrend
+from _traders import ema10ema41support, ema5ema8ema13, stochRsi3ema81450, ema3ema6ema9, admaworkthing, atrSupertrend
 
 class test_trader:
     candles = []
