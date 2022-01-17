@@ -11,19 +11,26 @@ import time
 import support.networker
 import pickle
 
-#candles1 = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '5', 200, True)
-candles1 = historic.get_data_yahoo("ETH-USD", "30m", "1mo")
+client = bybit.bybit(test=False, api_key=s.apiKey, api_secret=s.apiSecretKey)
+print("connected")
+print(client.LinearPositions.LinearPositions_myPosition(symbol="ETHUSDT").result()[0]['result'][0]['size'])
+
+#candles1 = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '60', 200, False)
+candles1 = historic.get_data_yahoo("ETH-USD", "1h", "3mo")
 
 print(len(candles1))
 print(candles1[-1].start_time)
 
-#fbv.get_best_custom_vals(candles1, tc.atrSupertrend, [1,50], [1,50], 0.0015, 1000)
+#fbv.get_best_custom_vals(candles1, tc.atrSupertrend, [1,20], [1,20], 0.0015, 1000)
 
-t = tc.atrSupertrend.init(True, 1000, 0.0015, 7, 20)
+t = tc.atrSupertrend.init(True, 1000, 0.0015, 2, 3)
 for i in candles1:
     t.add(i)
 
 print(t.get_result())
+
+plt.plot(t.monies)
+plt.show
 
 
 

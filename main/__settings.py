@@ -1,5 +1,5 @@
 # universal settings
 
 # ByBit API keys
-apiKey="cewdF6iWDBU3VFpBXL"
-apiSecretKey="Cmm8WxSUpUMaYkf9T6FCWyNfGpjGp9GUNbMo"
+apiKey="4rq7v0fErv8UqhgZSC"
+apiSecretKey="uNkKXD5Gw6fHVIdZJpQj4WZPgpxusYzCtddw"

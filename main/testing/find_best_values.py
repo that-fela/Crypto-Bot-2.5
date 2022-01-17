@@ -33,7 +33,7 @@ def get_best_custom_vals(candles, test_trader, var1, var2, fee=0.0015, start_mon
             for i in candles:
                 t.add(i)
             
-            params.append([v2, v1])
+            params.append([v1, v2])
             vals.append(t.get_result()[2])
             returns.append(t.get_result())
 
