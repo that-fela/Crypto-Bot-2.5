@@ -13,7 +13,7 @@ import pickle
 
 client = bybit.bybit(test=False, api_key=s.apiKey, api_secret=s.apiSecretKey)
 print("connected")
-print(client.LinearPositions.LinearPositions_myPosition(symbol="ETHUSDT").result()[0]['result'][0]['size'])
+print(client.LinearPositions.LinearPositions_myPosition(symbol="ETHUSDT").result()[0]['result'][0]['position_value'])
 
 #candles1 = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '60', 200, False)
 candles1 = historic.get_data_yahoo("ETH-USD", "1h", "3mo")

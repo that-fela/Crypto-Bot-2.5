@@ -35,10 +35,13 @@ def get_wallet_ballance_USDT(client):
     return wallet_money
 
 def in_trade(client, symbol="ETHUSDT"):
-    size = client.LinearPositions.LinearPositions_myPosition(symbol=symbol).result()[0]['result'][0]['size']
+    size = client.LinearPositions.LinearPositions_myPosition(symbol="ETHUSDT").result()[0]['result'][1]['position_value']
+    size += client.LinearPositions.LinearPositions_myPosition(symbol="ETHUSDT").result()[0]['result'][0]['position_value']
     if size == 0:
+        # not in trade
         return False
     elif size != 0:
+        # in trade
         return True
     else:
         return 0

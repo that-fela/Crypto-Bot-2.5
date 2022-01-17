@@ -26,7 +26,7 @@ try:
     ta = tC[0] + tC[1]
 
     for t1 in range(0, 23):
-        t2 = t1 + 0.9
+        t2 = t1 + 0.1
 
         if ta > t1 and ta < t2:
             print("IN TIME")
