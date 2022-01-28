@@ -1,6 +1,5 @@
 from time import monotonic
 from turtle import update
-import math
 
 
 class init:
@@ -13,14 +12,13 @@ class init:
     # main declaration
     atr_upper_ema = []
     atr_lower_ema = []
-    atr_basis_ema = []
     percentage = []
     ema1T = []
     ema2T = []
     
     start_after_candles = 50
-    ema1 = 0
-    ema2 = 0
+    ema1 = 7
+    ema2 = 20
     money = 0
     monies = []
     smoney = 0
@@ -30,18 +28,13 @@ class init:
     in_long = True
     wins = 0
     losses = 0
-    leverage = 1
-    leverage_multi = 3
-    leverageS = []
-    otherS = []
 
-    def __init__(self, paper_trading=True, start_money=1000, fee=0.0015, ema1=2, ema2=4):
+    def __init__(self, paper_trading=True, start_money=1000, fee=0.0015, tpsl=0.02, _OTHER=0):
         '''uses 5 8 13 ema crossovers for trade. Takes papertrading, startmoney, fee'''
         self.paper_trading = paper_trading
         self.money = start_money
         self.smoney = start_money
-        self.ema1 = ema1
-        self.ema2 = ema2
+        self.tpsl = tpsl
         self.fee = fee
 
     def get_result(self):
@@ -61,10 +54,10 @@ class init:
         # return [(0 1 2), tp, sl]
         
         if self.i > self.start_after_candles:
-            if (self.ema1T[-1] > self.ema2T[-1]) and (self.atr_lower_ema[-1] > self.candles[-1].low):
+            if (self.ema1T[-2] > self.ema2T[-2]) and (self.atr_lower_ema[-1] > self.candles[-2].low):
                 # BUY
                 return [1, self.percentage[-1], 2 - self.percentage[-1]]
-            elif (self.ema1T[-1] < self.ema2T[-1]) and (self.atr_upper_ema[-1] < self.candles[-1].high):
+            elif (self.ema1T[-2] < self.ema2T[-2]) and (self.atr_upper_ema[-1] < self.candles[-2].high):
                 # SELL
                 return [2, self.percentage[-1], 2 - self.percentage[-1]]
             else:
@@ -77,25 +70,26 @@ class init:
 
         # Should work
         # paper trading wins losses 
+        leverage = 1
         self.monies.append(self.money)
         if self.in_trade and self.paper_trading:
             if self.in_long:
-                if self.candles[-1].low <= self.buys[-1] * (2 - self.percentage[-1]):
-                    self.money = self.money + self.money * (2 - self.percentage[-1]) * self.leverage - self.money * self.fee * self.leverage - self.money * self.leverage
+                if self.candles[self.i].low <= self.buys[-1] * (1 + (1 - self.percentage[-1])):
+                    self.money = self.money + self.money * (1 + (1 - self.percentage[-1])) * leverage - self.money * self.fee * leverage - self.money * leverage
                     self.in_trade = False
                     self.losses += 1
-                elif self.candles[-1].high >= self.buys[-1] * self.percentage[-1]:
-                    self.money = self.money + self.money * self.percentage[-1] * self.leverage - self.money * self.leverage - self.money * self.fee * self.leverage
+                elif self.candles[self.i].high >= self.buys[-1] * self.percentage[-1]:
+                    self.money = self.money + self.money * self.percentage[-1] * leverage - self.money * leverage - self.money * self.fee * leverage
                     self.in_trade =  False                    
                     self.wins += 1
             
             if not self.in_long:
-                if self.candles[-1].high >= self.sells[-1] * (1 + (1 - self.percentage[-1])):
-                    self.money = self.money + self.money * self.percentage[-1] * self.leverage - self.money * self.fee * self.leverage - self.money * self.leverage
+                if self.candles[self.i].high >= self.sells[-1] * (1 + (1 - self.percentage[-1])):
+                    self.money = self.money + self.money * self.percentage[-1] * leverage - self.money * self.fee * leverage - self.money * leverage
                     self.in_trade = False
                     self.losses += 1
-                elif self.candles[-1].low <= self.sells[-1] * self.percentage[-1]:
-                    self.money = self.money + self.money * (2 - self.percentage[-1]) * self.leverage - self.money * self.fee * self.leverage - self.money * self.leverage
+                elif self.candles[self.i].low <= self.sells[-1] * self.percentage[-1]:
+                    self.money = self.money + self.money * (1 + (1 - self.percentage[-1])) * leverage - self.money * self.fee * leverage - self.money * leverage
                     self.in_trade = False
                     self.wins += 1
                     
@@ -129,8 +123,6 @@ class init:
                 self.atr_upper_ema.append(atr_upper[-1])
                 self.atr_lower_ema.append(atr_lower[-1])
 
-            self.atr_basis_ema.append((self.atr_upper_ema[-1] + self.atr_lower_ema[-1]) / 2)
-
         # ema 1
         if self.i >= self.ema1 + 1: 
             ema = (self.candles[self.i].close * (2 / (self.ema1 + 1))) + (self.ema1T[-1] * (1 - (2 / (self.ema1 + 1))))
@@ -143,30 +135,19 @@ class init:
             self.ema2T.append(ema)
         else: self.ema2T.append(self.candles[self.i].close)
     
+
         # trading setup
         if not self.in_trade and self.i > self.start_after_candles:
-            if (self.ema1T[-1] > self.ema2T[-1]) and (self.atr_lower_ema[-1] > self.candles[-1].low):
+            if (self.ema1T[-2] > self.ema2T[-2]) and (self.atr_lower_ema[-1] > self.candles[-2].low):
                 # BUY
-                if self.atr_basis_ema[-1] / self.atr_lower_ema[-1] > 1.0015:
-                    self.buys.append(self.atr_lower_ema[-1])
-                    self.in_trade = True 
-                    self.in_long = True 
-                    self.percentage.append(self.atr_basis_ema[-1] / self.atr_lower_ema[-1])
-                    
-                    self.leverage = int(math.exp((1/-0.97)*math.log(((self.percentage[-1] - 1) * self.leverage_multi) / 0.7384)))
+                self.buys.append(self.candles[self.i].open)
+                self.in_trade = True 
+                self.in_long = True 
+                self.percentage.append(self.tpsl)
 
-            elif (self.ema1T[-1] < self.ema2T[-1]) and (self.atr_upper_ema[-1] < self.candles[-1].high):
+            elif (self.ema1T[-2] < self.ema2T[-2]) and (self.atr_upper_ema[-1] < self.candles[-2].high):
                 # SELL
-                if self.atr_basis_ema[-1] / self.atr_upper_ema[-1] < 0.9985:
-                    self.sells.append(self.atr_upper_ema[-1])
-                    self.in_trade = True 
-                    self.in_long = False
-                    self.percentage.append(self.atr_basis_ema[-1] / self.atr_upper_ema[-1])
-                    
-                    self.leverage = int(math.exp(1/-0.97*math.log(((1 - self.percentage[-1]) * self.leverage_multi) / 0.7384)))
-
-            if self.leverage > 50: self.leverage = 50
-
-        if self.i > (self.start_after_candles):
-            self.otherS.append(self.atr_basis_ema[-1] /self.atr_lower_ema[-1])
-            self.leverageS.append(self.leverage)
+                self.sells.append(self.candles[self.i].open)
+                self.in_trade = True 
+                self.in_long = False
+                self.percentage.append(2 - self.tpsl)

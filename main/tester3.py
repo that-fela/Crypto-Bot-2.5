@@ -1,4 +1,5 @@
 
+from tokenize import PlainToken
 import historic
 import matplotlib.pyplot as plt
 from _traders import _trader_controller as tc
@@ -10,19 +11,25 @@ import do_trade
 import time
 import support.networker
 
-#candles1 = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '5', 200, True)
-candles1 = historic.get_data_yahoo("ETH-USD", "5m", "1mo")
+# SECONDS TESTER FOR ema3ema6ema9
+
+candles1 = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '60', 999, False)
+#candles1 = historic.get_data_yahoo("ETH-USD", "1h", "7d")
 print(len(candles1))
 print(candles1[-1].start_time)
 
-fbv.get_best_sl_tp(candles1, tc.ema3ema6ema9, [1,10], [1,10], 0.0015, 1000)
+#fbv.get_best_sl_tp(candles1, tc.ema3ema6ema9, [1,8], [1,8], 0.0015, 1000)
 
-t = tc.ema10ema41support.init(True, 1000, 0.002, 0.04, 0.02)
+b= []
+t = tc.ema3ema6ema9.init(True, 1000, 0.0015, 0.04, 0.06)
 for i in candles1:
     t.add(i)
+    b.append(i.close)
 
-print(t.get_result())
+r = t.get_result()
+print(r[:-1])
 
-
-
-
+print(len(r[4]))
+#plt.plot(r[4])
+plt.plot(b)
+plt.show()

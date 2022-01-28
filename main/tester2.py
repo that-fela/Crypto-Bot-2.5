@@ -11,7 +11,7 @@ import time
 import support.networker
 import random
 
-
+# MAINER TESTER FOR ema3ema6ema9s
 
 latest = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '120', 120*199, True)
 

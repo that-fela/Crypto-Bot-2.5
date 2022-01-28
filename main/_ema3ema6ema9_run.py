@@ -14,7 +14,7 @@ import smtplib
 # ALL THIS SHIT IS ON DERIVATIVES MARKET
 
 try:
-    networker.test("two guys one router", False)
+    networker.test("SPARK-QC5E56", False)
 
     tC = [0, 0]
 
@@ -25,8 +25,9 @@ try:
     tC[1] = float(t[1]) / 60
     ta = tC[0] + tC[1]
 
+    # check every hour
     for t1 in range(0, 23):
-        t2 = t1 + 0.1
+        t2 = t1 + 0.02
 
         if ta > t1 and ta < t2:
             print("IN TIME")
@@ -36,8 +37,9 @@ try:
             if not DT.in_trade(client, "ETHUSDT"):
                 print("Not in trade ... Continuing")
 
+                # 60min
                 candles = historic.get_data_bybit_DERIVATIVES('ETHUSDT', '60', 199)
-                t = tc.atrSupertrend.init(False)
+                t = tc.ema3ema6ema9.init(False)
                 for i in candles:
                     t.add(i)
 
@@ -52,7 +54,7 @@ try:
 
                 if cons[0] == 1:
                     # LONG
-                    if DT.long_tpsl(client, "ETHUSDT", qty, round(cons[1] * DT.get_ticker_USDT(client, id), 2), round(cons[2] * DT.get_ticker_USDT(client, id), 2), "Market"):
+                    if DT.long_tpsl(client, "ETHUSDT", qty, round(1.04 * DT.get_ticker_USDT(client, id), 2), round(0.94 * DT.get_ticker_USDT(client, id), 2), "Market"):
                         print("Buy succesful")
                     else:
                         print("BUY NOT COMPLETED")
@@ -60,7 +62,7 @@ try:
 
                 elif cons[0] == 2:
                     # SHORT
-                    if DT.short_tpsl(client, "ETHUSDT", qty, round(cons[1] * DT.get_ticker_USDT(client, id), 2), round(cons[2] * DT.get_ticker_USDT(client, id), 2), "Market"):
+                    if DT.short_tpsl(client, "ETHUSDT", qty, round(0.96 * DT.get_ticker_USDT(client, id), 2), round(1.06 * DT.get_ticker_USDT(client, id), 2), "Market"):
                         print("Sell succesful")
                     else:
                         print("SELL NOT COMPLETED")

@@ -10,6 +10,8 @@ import do_trade
 import time
 import support.networker
 
+# GENERAL TESING OF BYBIT ORDERS
+
 '''
 t1 = 23.96
 t2 = 23.98

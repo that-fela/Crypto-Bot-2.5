@@ -1,7 +1,7 @@
 @echo off
 
 :loop
-python _force_main_DER_atrSupertrend.py
+python _atrSupertrend_run.py
 echo Looped
 TIMEOUT /T 20
 goto loop

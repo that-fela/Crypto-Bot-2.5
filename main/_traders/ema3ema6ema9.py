@@ -17,6 +17,7 @@ class init:
     tpP = 0.0
     slP =  0.0
     money = 0
+    monies = []
     smoney = 0
     buys = []
     sells = []
@@ -54,7 +55,7 @@ class init:
     def get_result(self):
         '''Returns wins losses money startmoney ... etc'''
 
-        return [self.wins, self.losses, self.money, self.smoney]
+        return [self.wins, self.losses, self.money, self.smoney, self.monies]
 
     def add(self, candle):
         '''Adds a new candle. Takes data_types.candle'''
@@ -83,36 +84,38 @@ class init:
         '''Updates the trader'''
 
         # paper trading wins losses 
+        
+        self.monies.append(self.money)
         if self.in_trade and self.paper_trading:
             if self.in_long:
-                if self.candles[self.i].high >= self.buys[-1] + self.buys[-1] * self.tpP:
-                    self.money = self.money * (1 + self.tpP) - self.money * self.fee
-                    self.in_trade = False
-                    self.wins += 1
-                    self.takeprofit.append(self.candles[self.i].high)
-                    self.tp_time.append(self.i)
-
-                elif self.candles[self.i].low <= self.buys[-1] - self.buys[-1] * self.slP:
+                if self.candles[self.i].low <= self.buys[-1] - self.buys[-1] * self.slP:
                     self.money = self.money * (1 - self.slP) - self.money * self.fee
                     self.in_trade = False
                     self.losses += 1
                     self.stoploss.append(self.candles[self.i].low)
                     self.sl_time.append(self.i)
-            
-            if not self.in_long:
-                if self.candles[self.i].low <= self.sells[-1] - self.sells[-1] * self.tpP:
+                elif self.candles[self.i].high >= self.buys[-1] + self.buys[-1] * self.tpP:
                     self.money = self.money * (1 + self.tpP) - self.money * self.fee
                     self.in_trade = False
                     self.wins += 1
-                    self.takeprofit.append(self.candles[self.i].low)
+                    self.takeprofit.append(self.candles[self.i].high)
                     self.tp_time.append(self.i)
-
-                elif self.candles[self.i].high >= self.sells[-1] + self.sells[-1] * self.slP:
+            
+            if not self.in_long:
+                if self.candles[self.i].high >= self.sells[-1] + self.sells[-1] * self.slP:
                     self.money = self.money * (1 - self.slP) - self.money * self.fee
                     self.in_trade = False
                     self.losses += 1
                     self.stoploss.append(self.candles[self.i].high)
                     self.sl_time.append(self.i)
+                elif self.candles[self.i].low <= self.sells[-1] - self.sells[-1] * self.tpP:
+                    self.money = self.money * (1 + self.tpP) - self.money * self.fee
+                    self.in_trade = False
+                    self.wins += 1
+                    self.takeprofit.append(self.candles[self.i].low)
+                    self.tp_time.append(self.i)
+            
+            
 
         # emas
         #ema 3
@@ -133,16 +136,16 @@ class init:
 
         # trading setup
         if not self.in_trade and self.i > self.start_after_candles:
-            if self.ema_3[-1] > self.ema_6[-1] > self.ema_9[-1]:
+            if self.ema_3[-2] > self.ema_6[-2] > self.ema_9[-2]:
                 # BUY
-                self.buys.append(self.candles[self.i].close)
+                self.buys.append(self.candles[self.i].open)
                 self.in_trade = True 
                 self.in_long = True 
                 self.buy_time.append(self.i)
 
-            elif self.ema_3[-1] < self.ema_6[-1] < self.ema_9[-1]:
+            elif self.ema_3[-2] < self.ema_6[-2] < self.ema_9[-2]:
                 # SELL
-                self.sells.append(self.candles[self.i].close)
+                self.sells.append(self.candles[self.i].open)
                 self.in_trade = True 
                 self.in_long = False
                 self.sell_time.append(self.i)

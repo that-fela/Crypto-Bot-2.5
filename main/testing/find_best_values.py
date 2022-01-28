@@ -19,7 +19,7 @@ def get_best_sl_tp(candles, test_trader, range_sl, range_tp, fee=0.0015, start_m
     m = max(vals)
     i = vals.index(m)
     print(params[i])
-    print(returns[i])
+    print(returns[i][:-1])
 
 def get_best_custom_vals(candles, test_trader, var1, var2, fee=0.0015, start_money = 1000):
     '''gets best SL TP Values. Ranges array has to be values * 100'''
