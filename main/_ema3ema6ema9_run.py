@@ -31,7 +31,7 @@ try:
 
         if ta > t1 and ta < t2:
             print("IN TIME")
-            client = bybit.bybit(test=False, api_key=s.apiKey, api_secret=s.apiSecretKey)
+            client = bybit.bybit(test=True, api_key=s.apiKey, api_secret=s.apiSecretKey)
             id = 7
 
             if not DT.in_trade(client, "ETHUSDT"):
