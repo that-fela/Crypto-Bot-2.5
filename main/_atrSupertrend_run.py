@@ -14,8 +14,10 @@ import smtplib
 # ALL THIS SHIT IS ON DERIVATIVES MARKET
 
 try:
+    # checks for an internet connection
     networker.test("two guys one router", False)
 
+    # runs the trader on a full hour
     tC = [0, 0]
 
     timestamp = time.strftime('%H:%M')
